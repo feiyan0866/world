@@ -1,0 +1,149 @@
+/* ==========================================================================
+   Bento Press — Design System (Tailwind v4 CSS-first Configuration)
+   ========================================================================== */
+
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+/* --------------------------------------------------------------------------
+   @theme — Design Tokens（设计师专属设计系统）
+   -------------------------------------------------------------------------- */
+@theme {
+  /* 字体族 */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-heading: 'Outfit', 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* 品牌色阶 —— 以 lime 为强调色 */
+  --color-brand-50: oklch(0.98 0.04 120);
+  --color-brand-100: oklch(0.95 0.08 120);
+  --color-brand-200: oklch(0.90 0.14 120);
+  --color-brand-300: oklch(0.84 0.20 120);
+  --color-brand-400: oklch(0.77 0.22 120);
+  --color-brand-500: oklch(0.72 0.20 118);
+  --color-brand-600: oklch(0.60 0.18 118);
+
+  /* 中性灰阶（基于 zinc） */
+  --color-surface-50: oklch(0.97 0 0);
+  --color-surface-100: oklch(0.93 0.005 240);
+  --color-surface-200: oklch(0.85 0.005 240);
+  --color-surface-300: oklch(0.72 0.005 240);
+  --color-surface-400: oklch(0.55 0.01 240);
+  --color-surface-500: oklch(0.40 0.01 240);
+  --color-surface-600: oklch(0.30 0.01 240);
+  --color-surface-700: oklch(0.23 0.01 240);
+  --color-surface-800: oklch(0.18 0.01 240);
+  --color-surface-900: oklch(0.13 0.01 240);
+  --color-surface-950: oklch(0.08 0.01 240);
+
+  /* 圆角 */
+  --radius-card: 1.5rem;
+  --radius-pill: 9999px;
+
+  /* 间距尺度 */
+  --spacing-section: clamp(3rem, 6vw, 6rem);
+
+  /* 过渡持续 */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+
+  /* 缓动曲线 */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   全局 Base 层
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-surface-950);
+    color: var(--color-surface-200);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    color: var(--color-surface-50);
+  }
+
+  /* 链接默认无下划线 + lime 强调 */
+  a {
+    text-decoration: none;
+    transition: color var(--duration-fast) ease;
+  }
+
+  /* 选中文字配色 */
+  ::selection {
+    background-color: oklch(0.72 0.20 118 / 0.3);
+    color: var(--color-surface-50);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   View Transitions 自定义动画曲线
+   -------------------------------------------------------------------------- */
+@layer base {
+  /* 旧页面退出 */
+  ::view-transition-old(root) {
+    animation: fade-out var(--duration-normal) var(--ease-out-expo) both;
+  }
+
+  /* 新页面进入 */
+  ::view-transition-new(root) {
+    animation: fade-in var(--duration-normal) var(--ease-out-expo) both;
+  }
+
+  /* Hero 图片过渡：缩放 + 淡入 */
+  ::view-transition-old(hero) {
+    animation: scale-down var(--duration-slow) var(--ease-out-expo) both;
+  }
+  ::view-transition-new(hero) {
+    animation: scale-up var(--duration-slow) var(--ease-out-expo) both;
+  }
+
+  @keyframes fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes scale-down {
+    from { transform: scale(1); opacity: 1; }
+    to   { transform: scale(0.95); opacity: 0; }
+  }
+  @keyframes scale-up {
+    from { transform: scale(1.05); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Prose 微调：博客阅读页排版（呼吸感 + 易读性）
+   -------------------------------------------------------------------------- */
+@layer components {
+  .prose-blog {
+    --tw-prose-body: var(--color-surface-300);
+    --tw-prose-headings: var(--color-surface-50);
+    --tw-prose-links: var(--color-brand-400);
+    --tw-prose-bold: var(--color-surface-100);
+    --tw-prose-code: var(--color-brand-300);
+    --tw-prose-pre-bg: var(--color-surface-900);
+    --tw-prose-pre-code: var(--color-surface-200);
+    --tw-prose-quotes: var(--color-surface-300);
+    --tw-prose-quote-borders: var(--color-brand-500);
+    --tw-prose-hr: var(--color-surface-800);
+  }
+}

@@ -1,0 +1,71 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+};
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<Layout
+  title={`${project.data.title} — Lu Zhongyan`}
+  description={project.data.description}
+>
+  <article class="max-w-5xl mx-auto px-6 py-(--spacing-section)">
+    <!-- Hero Banner（与首页卡片共享 transition:name） -->
+    <div class="relative rounded-(--radius-card) overflow-hidden mb-12 aspect-video">
+      <Image
+        src={project.data.cover}
+        alt={project.data.title}
+        widths={[800, 1200, 1600]}
+        sizes="(max-width: 1024px) 100vw, 80vw"
+        class="w-full h-full object-cover"
+        transition:name={`hero-${project.id}`}
+      />
+    </div>
+
+    <!-- 项目头部信息 -->
+    <header class="mb-12">
+      <div class="flex flex-wrap gap-2 mb-4">
+        {project.data.tags.map((tag: string) => (
+          <span class="text-xs px-3 py-1 rounded-(--radius-pill) bg-(--color-surface-800) text-(--color-brand-400) border border-(--color-surface-700)">
+            {tag}
+          </span>
+        ))}
+      </div>
+      <h1 class="text-3xl md:text-5xl font-(family-name:--font-heading) font-semibold tracking-tight text-(--color-surface-50) leading-tight">
+        {project.data.title}
+      </h1>
+      <p class="text-lg text-(--color-surface-400) mt-4 max-w-2xl">
+        {project.data.description}
+      </p>
+    </header>
+
+    <!-- MDX 正文 -->
+    <div class="prose prose-invert prose-blog
+                prose-headings:font-(family-name:--font-heading) prose-headings:font-medium prose-headings:tracking-tight
+                prose-p:leading-relaxed
+                prose-a:text-(--color-brand-400) prose-a:no-underline hover:prose-a:underline
+                prose-img:rounded-(--radius-card)
+                prose-table:text-sm
+                max-w-none">
+      <Content />
+    </div>
+
+    <!-- 返回导航 -->
+    <div class="mt-16 pt-8 border-t border-(--color-surface-800)">
+      <a href="/" class="inline-flex items-center gap-2 text-sm text-(--color-surface-400) hover:text-(--color-brand-400) transition-colors duration-(--duration-fast)">
+        ← 返回全部作品
+      </a>
+    </div>
+  </article>
+</Layout>

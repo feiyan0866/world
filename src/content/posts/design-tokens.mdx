@@ -1,0 +1,80 @@
+---
+title: "设计系统不是组件库：被误解的 Design Tokens"
+pubDate: 2026-04-15
+description: "很多团队把 Design Tokens 简单理解为'颜色变量表'。但真正的 Tokens 是设计决策的单一信源，是连接设计与工程的契约。"
+category: "Design System"
+---
+
+每当谈起 Design Tokens，大多数人脑海里浮现的是一张色卡：`primary-500: #6366f1`、`gray-100: #f3f4f6`……
+
+如果你也这么想，那说明我们严重低估了 Design Tokens 的价值。
+
+## Tokens 是"决策"，不是"数值"
+
+Design Tokens 的本质，是把**设计决策**抽象为**有语义的命名变量**。注意，是"决策"，不是"数值"。
+
+举个例子，对比这两种命名：
+
+```css
+/* ❌ 描述"是什么" */
+--color-blue-500: #3b82f6;
+
+/* ✅ 描述"用来干什么" */
+--color-action-primary: #3b82f6;
+```
+
+前者只是个颜色，后者是一个**设计意图**。当品牌色从蓝变绿时，前者需要全局替换，后者只需改一处。
+
+## 三层架构
+
+成熟的 Token 系统通常分三层：
+
+### 1. Global Tokens（全局原子）
+
+最底层的原始值，纯粹描述"是什么"：
+
+```css
+--blue-500: #3b82f6;
+--space-4: 1rem;
+```
+
+### 2. Semantic Tokens（语义层）
+
+赋予原子值以"语义"，描述用途：
+
+```css
+--color-action-primary: var(--blue-500);
+--spacing-card-padding: var(--space-4);
+```
+
+### 3. Component Tokens（组件层）
+
+针对具体组件的细粒度变量：
+
+```css
+--button-bg: var(--color-action-primary);
+```
+
+## 为什么这很重要
+
+这套分层架构带来的核心价值是 **单一信源（Single Source of Truth）**：
+
+- **设计师** 在 Figma 改一个 Token
+- 通过工具链同步到代码
+- **工程师** 的组件自动更新
+- 设计与实现永不脱节
+
+> Design Tokens 是设计与工程之间的"契约语言"。它让设计系统从"一堆好看的组件"，进化为"一套可维护、可扩展的决策体系"。
+
+## 实践建议
+
+1. **从语义出发命名**，而非从外观
+2. **善用 CSS 自定义属性**，配合 Tailwind v4 的 `@theme` 可以优雅落地
+3. **建立同步机制**，让设计稿与代码 Token 自动对齐
+4. **克制层级**，不要为了分层而分层
+
+## 结语
+
+下次当有人说"我们已经有设计系统了，就是那个组件库"时，你可以反问一句：**你们的 Design Tokens 分层了吗？**
+
+组件库是表象，Tokens 才是设计系统的灵魂。

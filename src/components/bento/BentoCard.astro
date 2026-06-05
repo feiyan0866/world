@@ -1,0 +1,42 @@
+---
+// BentoCard.astro — 通用便当盒小卡片
+interface Props {
+  /** 标签文字 */
+  label?: string;
+  /** 链接地址 */
+  href?: string;
+  /** 跨列数 */
+  colSpan?: 1 | 2;
+  /** 自定义样式 */
+  class?: string;
+}
+
+const { label, href, colSpan = 1, class: className = '' } = Astro.props;
+
+const Tag = href ? 'a' : 'div';
+const spanClass = colSpan === 2 ? 'sm:col-span-2' : '';
+---
+
+<Tag
+  href={href}
+  class:list={[
+    'group rounded-(--radius-card) p-6 md:p-7 border border-(--color-surface-800) bg-(--color-surface-900) flex flex-col justify-between transition-all duration-(--duration-normal)',
+    href && 'hover:border-(--color-brand-400)/30 hover:bg-(--color-surface-900)/80',
+    spanClass,
+    className,
+  ]}
+>
+  {label && (
+    <span class="text-xs font-medium tracking-widest uppercase text-(--color-surface-500) mb-4">
+      {label}
+    </span>
+  )}
+  <div class="flex-1 flex flex-col justify-end">
+    <slot />
+  </div>
+  {href && (
+    <span class="text-(--color-brand-400) text-sm mt-3 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-(--duration-fast)">
+      查看 ↗
+    </span>
+  )}
+</Tag>

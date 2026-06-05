@@ -1,0 +1,53 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate?: Date;
+  category?: string;
+}
+
+const { title, description, pubDate, category } = Astro.props;
+
+const formattedDate = pubDate
+  ? new Intl.DateTimeFormat('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(pubDate)
+  : null;
+---
+
+<Layout title={`${title} — Blog`} description={description}>
+  <article class="mx-auto max-w-[42rem] px-6 py-(--spacing-section)">
+    <!-- 文章头部 -->
+    <header class="mb-12">
+      {category && (
+        <span class="inline-block text-xs font-medium tracking-widest uppercase text-(--color-brand-400) mb-4">
+          {category}
+        </span>
+      )}
+      <h1 class="text-3xl md:text-4xl font-(family-name:--font-heading) font-semibold tracking-tight leading-tight text-(--color-surface-50)">
+        {title}
+      </h1>
+      {formattedDate && (
+        <time class="block mt-4 text-sm text-(--color-surface-500)">
+          {formattedDate}
+        </time>
+      )}
+    </header>
+
+    <!-- MDX 正文：像素级排版，控制每行 35-42 个汉字 -->
+    <div class="prose prose-invert prose-blog
+                prose-headings:font-(family-name:--font-heading) prose-headings:font-medium prose-headings:tracking-tight
+                prose-p:leading-relaxed prose-p:text-justify
+                prose-a:text-(--color-brand-400) prose-a:no-underline hover:prose-a:underline
+                prose-img:rounded-(--radius-card)
+                prose-code:text-sm
+                prose-pre:rounded-xl prose-pre:border prose-pre:border-(--color-surface-800)
+                max-w-none">
+      <slot />
+    </div>
+  </article>
+</Layout>

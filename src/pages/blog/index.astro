@@ -1,0 +1,52 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (
+  await getCollection('posts', ({ data }) => !data.draft)
+).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const formatDate = (date: Date) =>
+  new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date);
+---
+
+<Layout title="博客 — Lu Zhongyan" description="关于设计的深度思考与方法论。">
+  <section class="max-w-3xl mx-auto px-6 py-(--spacing-section)">
+    <header class="mb-12">
+      <h1 class="text-3xl md:text-4xl font-(family-name:--font-heading) font-semibold tracking-tight text-(--color-surface-50)">
+        博客
+      </h1>
+      <p class="text-(--color-surface-400) mt-3 text-lg">
+        设计思考、方法论、以及我从实践中获得的洞见。
+      </p>
+    </header>
+
+    <div class="space-y-1">
+      {posts.map((post) => (
+        <a
+          href={`/blog/${post.id}`}
+          class="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-6 py-5 border-b border-(--color-surface-800)/50 hover:border-(--color-brand-400)/30 transition-colors duration-(--duration-normal)"
+        >
+          <time class="text-sm text-(--color-surface-500) tabular-nums shrink-0 sm:w-32">
+            {formatDate(post.data.pubDate)}
+          </time>
+          <div class="flex-1">
+            <h2 class="text-base md:text-lg font-medium text-(--color-surface-200) group-hover:text-(--color-brand-400) transition-colors duration-(--duration-fast)">
+              {post.data.title}
+            </h2>
+            <p class="text-sm text-(--color-surface-500) mt-1 line-clamp-2">
+              {post.data.description}
+            </p>
+          </div>
+          <span class="text-(--color-brand-400) text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-(--duration-fast) hidden sm:block">
+            ↗
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

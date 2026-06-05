@@ -1,0 +1,24 @@
+---
+// BentoIntro.astro — 首页 Hero 介绍卡（占据大格）
+---
+
+<div class="sm:col-span-2 lg:col-span-2 lg:row-span-2 group relative overflow-hidden rounded-(--radius-card) p-8 md:p-10 flex flex-col justify-between bg-gradient-to-br from-(--color-surface-900) to-(--color-surface-950) border border-(--color-surface-800)">
+  <!-- 装饰性光晕 -->
+  <div class="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-(--color-brand-500)/10 blur-3xl group-hover:bg-(--color-brand-500)/20 transition-all duration-700"></div>
+
+  <div class="relative z-10">
+    <span class="inline-flex items-center gap-2 text-xs font-medium tracking-widest uppercase text-(--color-brand-400) mb-6">
+      <span class="w-2 h-2 rounded-full bg-(--color-brand-400) animate-pulse"></span>
+      Available for work
+    </span>
+    <h1 class="text-3xl md:text-5xl lg:text-6xl font-(family-name:--font-heading) font-medium tracking-tight text-(--color-surface-50) leading-[1.05]">
+      Shaping digital<br />
+      experiences through<br />
+      <span class="text-(--color-brand-400)">motion</span> & pixels.
+    </h1>
+  </div>
+
+  <p class="relative z-10 text-(--color-surface-400) text-base md:text-lg max-w-md mt-6">
+    👋 我是卢忠彦，一名视觉设计师。这里记录我的视觉实验与深度的设计思考。
+  </p>
+</div>

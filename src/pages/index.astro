@@ -1,0 +1,79 @@
+---
+import Layout from '@layouts/Layout.astro';
+import BentoGrid from '@components/bento/BentoGrid.astro';
+import BentoIntro from '@components/bento/BentoIntro.astro';
+import BentoProject from '@components/bento/BentoProject.astro';
+import BentoCard from '@components/bento/BentoCard.astro';
+import { getCollection } from 'astro:content';
+
+// 获取所有标记为 featured 的作品，按 order 排序
+const featuredProjects = (
+  await getCollection('projects', ({ data }) => data.featured)
+).sort((a, b) => a.data.order - b.data.order);
+
+// 获取最新的博客文章
+const latestPosts = (
+  await getCollection('posts', ({ data }) => !data.draft)
+).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const latestPost = latestPosts[0];
+---
+
+<Layout>
+  <section class="max-w-7xl mx-auto px-6 py-(--spacing-section)">
+    <BentoGrid>
+      <!-- Hero 介绍卡（2x2） -->
+      <BentoIntro />
+
+      <!-- 第一个作品（1x2，高卡） -->
+      {featuredProjects[0] && (
+        <BentoProject
+          id={featuredProjects[0].id}
+          title={featuredProjects[0].data.title}
+          cover={featuredProjects[0].data.cover}
+          heroVideo={featuredProjects[0].data.heroVideo}
+          rowSpan={2}
+        />
+      )}
+
+      <!-- 关于卡片 -->
+      {featuredProjects[1] && (
+        <BentoProject
+          id={featuredProjects[1].id}
+          title={featuredProjects[1].data.title}
+          cover={featuredProjects[1].data.cover}
+          heroVideo={featuredProjects[1].data.heroVideo}
+        />
+      )}
+
+      <!-- 最新博文引用 -->
+      <BentoCard label="Latest Thought" href="/blog">
+        <p class="text-base md:text-lg font-medium text-(--color-surface-200) leading-snug">
+          "{latestPost?.data.title}" ↗
+        </p>
+      </BentoCard>
+
+      <!-- 剩余作品 -->
+      {featuredProjects.slice(2).map((project, i) => (
+        <BentoProject
+          id={project.id}
+          title={project.data.title}
+          cover={project.data.cover}
+          heroVideo={project.data.heroVideo}
+          colSpan={i === 0 ? 2 : 1}
+        />
+      ))}
+
+      <!-- 技能 / 工具卡 -->
+      <BentoCard label="Design Stack" class="sm:col-span-2">
+        <div class="flex flex-wrap gap-2 mt-2">
+          {['Figma', 'After Effects', 'Blender', 'Framer', 'Tailwind', 'Astro'].map((tool) => (
+            <span class="text-xs px-3 py-1.5 rounded-(--radius-pill) bg-(--color-surface-800) text-(--color-surface-300) border border-(--color-surface-700)">
+              {tool}
+            </span>
+          ))}
+        </div>
+      </BentoCard>
+    </BentoGrid>
+  </section>
+</Layout>

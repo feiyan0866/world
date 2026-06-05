@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  id: string;
+  title: string;
+  cover: ImageMetadata;
+  heroVideo?: string;
+  /** 跨列数，默认 1 */
+  colSpan?: 1 | 2;
+  /** 跨行数，默认 1 */
+  rowSpan?: 1 | 2;
+}
+
+const {
+  id,
+  title,
+  cover,
+  heroVideo,
+  colSpan = 1,
+  rowSpan = 1,
+} = Astro.props;
+
+const spanClasses = [
+  colSpan === 2 ? 'sm:col-span-2' : '',
+  rowSpan === 2 ? 'row-span-2' : '',
+].filter(Boolean).join(' ');
+---
+
+<a
+  href={`/projects/${id}`}
+  class:list={[
+    'group relative overflow-hidden rounded-(--radius-card) border border-(--color-surface-800) bg-(--color-surface-900) block',
+    spanClasses,
+  ]}
+>
+  {heroVideo ? (
+    <video
+      src={heroVideo}
+      autoplay
+      loop
+      muted
+      playsinline
+      class="w-full h-full object-cover transition-transform duration-(--duration-slow) ease-(--ease-out-expo) group-hover:scale-105"
+    />
+  ) : (
+    <Image
+      src={cover}
+      alt={title}
+      widths={[400, 800, 1200]}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      class="w-full h-full object-cover transition-transform duration-(--duration-slow) ease-(--ease-out-expo) group-hover:scale-105"
+      transition:name={`hero-${id}`}
+    />
+  )}
+
+  <!-- 渐变遮罩 + 标题 -->
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-5 md:p-6 flex flex-col justify-end opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-(--duration-normal)">
+    <h3 class="text-base md:text-lg font-medium text-(--color-surface-50) translate-y-2 group-hover:translate-y-0 transition-transform duration-(--duration-normal) ease-(--ease-out-expo)">
+      {title}
+    </h3>
+  </div>
+
+  <!-- 右上角箭头指示 -->
+  <div class="absolute top-4 right-4 w-8 h-8 rounded-full bg-(--color-surface-950)/60 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-(--duration-normal)">
+    <svg class="w-4 h-4 text-(--color-surface-100)" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M4 12L12 4M12 4H5M12 4V11" />
+    </svg>
+  </div>
+</a>
