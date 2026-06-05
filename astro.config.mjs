@@ -7,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   // 部署到 Vercel 时替换为你的正式域名，sitemap 与规范链接依赖该值
-  site: 'https://bento-press.vercel.app',
+  site: 'https://blog.feiyan.fun',
   integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
